@@ -379,27 +379,35 @@ func getTransactions(stub shim.ChaincodeStubInterface) ([]Transaction, error) {
 }
 
 func writeHome(stub shim.ChaincodeStubInterface, home Home) error {
+	fmt.Printf("Enter writeHome \n")
 	homeBytes, err := json.Marshal(&home)
 	if err != nil {
+		fmt.Printf("json.Marshal failed \n")
 		return err
 	}
 	err = stub.PutState(home.Address, homeBytes)
 	if err != nil {
+		fmt.Printf("stub.PutState failed \n")
 		return errors.New("PutState Error" + err.Error())
 	}
+	fmt.Printf("Out writeHome \n")
 	return nil
 }
 
 func writeTransaction(stub shim.ChaincodeStubInterface, transaction Transaction) error {
+	fmt.Printf("Enter writeTransaction \n")
 	txBytes, err := json.Marshal(&transaction)
 	if err != nil {
+		fmt.Printf("json.Marshal failed \n")
 		return nil
 	}
 
 	id := strconv.Itoa(transaction.Id)
 	err = stub.PutState("transaction"+id, txBytes)
 	if err != nil {
+		fmt.Printf("stub.PutState failed \n")
 		return errors.New("PutState Error" + err.Error())
 	}
+	fmt.Printf("Out writeTransaction \n")
 	return nil
 }

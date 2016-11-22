@@ -383,7 +383,7 @@ func getTransactions(stub shim.ChaincodeStubInterface) ([]Transaction, error) {
 
 func writeHome(stub shim.ChaincodeStubInterface, home Home) error {
 	fmt.Printf("Enter writeHome \n")
-	fmt.Printf("HomeInfo: address = %v, energy = %v, money = %v, homeNo = %v, priKey = %v, pubKey = %v\n", home.address, home.energy, home.money, home.homeNo, home.priKey, home.pubKey)
+	fmt.Printf("HomeInfo: address = %v, energy = %v, money = %v, homeNo = %v, priKey = %v, pubKey = %v\n", home.Address, home.Energy, home.Money, home.Id, home.PriKey, home.PubKey)
 	homeBytes, err := json.Marshal(&home)
 	if err != nil {
 		fmt.Printf("json.Marshal failed \n")

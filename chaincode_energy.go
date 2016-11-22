@@ -221,6 +221,28 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 		return nil, errors.New("not enough money or energy")
 	}
 
+	fmt.Printf("Before trans:\n  homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
+	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
+	homeSeller.Energy = homeSeller.Energy - buyValue
+	homeSeller.Money = homeSeller.Money + buyValue
+	homeBuyer.Energy = homeBuyer.Energy + buyValue
+	homeBuyer.Money = homeBuyer.Money - buyValue
+
+	fmt.Printf("After trans:\n  homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
+	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
+
+	err = writeHome(stub, homeSeller)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("Write homeSeller OK!\n")
+
+	err = writeHome(stub, homeBuyer)
+	if err != nil {
+		return nil, err
+	}
+	fmt.Printf("Write homeBuyer OK!\n")
+
 	fmt.Printf("TransactionInfo:\n")
 	fmt.Printf("    BuyerAddress: %v\n", args[2])
 	fmt.Printf("    BuyerAddressSign: %v\n", args[1])
@@ -234,31 +256,6 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	if err != nil {
 		return nil, err
 	}
-
-	fmt.Printf("Write transactionInfo OK\n")
-	fmt.Printf("Before trans:\n  homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
-	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
-
-	homeSeller.Energy = homeSeller.Energy - buyValue
-	homeSeller.Money = homeSeller.Money + buyValue
-	homeBuyer.Energy = homeBuyer.Energy + buyValue
-	homeBuyer.Money = homeBuyer.Money - buyValue
-
-	fmt.Printf("After trans:\n  homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
-	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
-
-	err = writeHome(stub, homeSeller)
-	if err == nil {
-		return nil, err
-	}
-	fmt.Printf("Write homeSeller OK!\n")
-
-	err = writeHome(stub, homeBuyer)
-	if err == nil {
-		return nil, err
-	}
-	fmt.Printf("Write homeBuyer OK!\n")
-
 	transactionNo = transactionNo + 1
 	txBytes, err := json.Marshal(&transaction)
 
@@ -383,7 +380,6 @@ func getTransactions(stub shim.ChaincodeStubInterface) ([]Transaction, error) {
 
 func writeHome(stub shim.ChaincodeStubInterface, home Home) error {
 	fmt.Printf("Enter writeHome \n")
-	fmt.Printf("HomeInfo: address = %v, energy = %v, money = %v, homeNo = %v, priKey = %v, pubKey = %v\n", home.Address, home.Energy, home.Money, home.Id, home.PriKey, home.PubKey)
 	homeBytes, err := json.Marshal(&home)
 	if err != nil {
 		fmt.Printf("json.Marshal failed \n")

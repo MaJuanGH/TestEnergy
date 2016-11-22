@@ -221,6 +221,21 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 		return nil, errors.New("not enough money or energy")
 	}
 
+	fmt.Printf("TransactionInfo:\n")
+	fmt.Printf("    BuyerAddress: %v\n", args[2])
+	fmt.Printf("    BuyerAddressSign: %v\n", args[1])
+	fmt.Printf("    SellerAddress: %v\n", args[0])
+	fmt.Printf("    Energy: %v\n", buyValue)
+	fmt.Printf("    Money: %v\n", buyValue)
+	fmt.Printf("    Id: %v\n", transactionNo)
+
+	transaction := Transaction{BuyerAddress: args[2], BuyerAddressSign: args[1], SellerAddress: args[0], Energy: buyValue, Money: buyValue, Id: transactionNo, Time: time.Now().Unix()}
+	err = writeTransaction(stub, transaction)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Printf("Write transactionInfo OK\n")
 	fmt.Printf("Before trans:\n  homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
 	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
 
@@ -244,19 +259,6 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	}
 	fmt.Printf("Write homeBuyer OK!\n")
 
-	fmt.Printf("TransactionInfo:\n")
-	fmt.Printf("    BuyerAddress: %v\n", args[2])
-	fmt.Printf("    BuyerAddressSign: %v\n", args[1])
-	fmt.Printf("    SellerAddress: %v\n", args[0])
-	fmt.Printf("    Energy: %v\n", buyValue)
-	fmt.Printf("    Money: %v\n", buyValue)
-	fmt.Printf("    Id: %v\n", transactionNo)
-
-	transaction := Transaction{BuyerAddress: args[2], BuyerAddressSign: args[1], SellerAddress: args[0], Energy: buyValue, Money: buyValue, Id: transactionNo, Time: time.Now().Unix()}
-	err = writeTransaction(stub, transaction)
-	if err != nil {
-		return nil, err
-	}
 	transactionNo = transactionNo + 1
 	txBytes, err := json.Marshal(&transaction)
 
@@ -412,4 +414,3 @@ func writeTransaction(stub shim.ChaincodeStubInterface, transaction Transaction)
 	fmt.Printf("Out writeTransaction \n")
 	return nil
 }
-

@@ -221,14 +221,15 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 		return nil, errors.New("not enough money or energy")
 	}
 
-	fmt.Printf("Before trans:\n homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
+	fmt.Printf("Before trans:\n  homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
 	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
+
 	homeSeller.Energy = homeSeller.Energy - buyValue
 	homeSeller.Money = homeSeller.Money + buyValue
 	homeBuyer.Energy = homeBuyer.Energy + buyValue
 	homeBuyer.Money = homeBuyer.Money - buyValue
 
-	fmt.Printf("After trans:\n homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
+	fmt.Printf("After trans:\n  homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
 	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
 
 	err = writeHome(stub, homeSeller)
@@ -411,3 +412,4 @@ func writeTransaction(stub shim.ChaincodeStubInterface, transaction Transaction)
 	fmt.Printf("Out writeTransaction \n")
 	return nil
 }
+

@@ -48,14 +48,15 @@ type Transaction struct {
 }
 
 func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	if len(args) != 2 {
+	if len(args) != 0 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
-	if function == "createUser" {
+	/*	if function == "createUser" {
 		fmt.Printf("Start createUser...\n")
 		return t.createUser(stub, args)
-	}
+	}*/
+	fmt.Printf("Init OK!\n")
 	return nil, nil
 }
 
@@ -70,6 +71,11 @@ func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function stri
 			return nil, errors.New("Incorrect number of arguments. Expecting 1")
 		}
 		return buyByAddress(stub, args)
+	} else if function == "createUser" {
+		if len(args) != 3 {
+			return nil, errors.New("Incorrect number of arguments. Expecting 1")
+		}
+		return t.createUser(stub, args)
 	}
 	return nil, errors.New("Received unknown function invocation")
 }
@@ -155,6 +161,7 @@ func GetAddress() (string, string, string) {
 }
 
 func (t *SimpleChaincode) createUser(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	fmt.Printf("Enter createUser...")
 	var energy, money int
 	var err error
 	var homeBytes []byte
@@ -173,7 +180,7 @@ func (t *SimpleChaincode) createUser(stub shim.ChaincodeStubInterface, args []st
 		fmt.Printf("get money failed\n")
 		return nil, errors.New("want Integer number")
 	}
-	fmt.Printf("address = %v, energy = %v, money = %v, homeNo = %v, priKey = %v, pubKey = %v")
+	fmt.Printf("HomeInfo: address = %v, energy = %v, money = %v, homeNo = %v, priKey = %v, pubKey = %v\n", address, energy, money, homeNo, priKey, pubKey)
 	home := Home{Address: address, Energy: energy, Money: money, Id: homeNo, Status: 1, PriKey: priKey, PubKey: pubKey}
 	err = writeHome(stub, home)
 	if err != nil {

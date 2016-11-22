@@ -14,10 +14,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/hyperledger/fabric/core/chaincode/shim"
 	"io"
 	"strconv"
 	"time"
+
+	"github.com/hyperledger/fabric/core/chaincode/shim"
 )
 
 type SimpleChaincode struct {
@@ -52,7 +53,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	}
 
 	if function == "createUser" {
-		fmt.Printf("start createUser\n")
+		fmt.Printf("Start createUser...\n")
 		return t.createUser(stub, args)
 	}
 	return nil, nil
@@ -149,7 +150,7 @@ func GetAddress() (string, string, string) {
 	priKey = address + "1"
 	pubKey = address + "2"
 
-	fmt.Printf("get address ok, address = %v, priKey = %v, pubKey = %v\n", address, priKey, pubKey)
+	fmt.Printf("Get address ok, address = %v, priKey = %v, pubKey = %v\n", address, priKey, pubKey)
 	return address, priKey, pubKey
 }
 
@@ -172,6 +173,7 @@ func (t *SimpleChaincode) createUser(stub shim.ChaincodeStubInterface, args []st
 		fmt.Printf("get money failed\n")
 		return nil, errors.New("want Integer number")
 	}
+	fmt.Printf("address = %v, energy = %v, money = %v, homeNo = %v, priKey = %v, pubKey = %v")
 	home := Home{Address: address, Energy: energy, Money: money, Id: homeNo, Status: 1, PriKey: priKey, PubKey: pubKey}
 	err = writeHome(stub, home)
 	if err != nil {
@@ -183,11 +185,13 @@ func (t *SimpleChaincode) createUser(stub shim.ChaincodeStubInterface, args []st
 		fmt.Printf("marshal home byte failed\n")
 		return nil, errors.New("Error retrieve")
 	}
-	fmt.Printf("create user success\n")
+	fmt.Printf("Create user success!\n")
+	fmt.Printf("homeBytes = %v!\n", homeBytes)
 	return homeBytes, nil
 }
 
 func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {
+	fmt.Printf("Enter buyByAddress\n")
 	if len(args) != 4 {
 		return nil, errors.New("Incorrect number of arguments. Expecting 4")
 	}

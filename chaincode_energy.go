@@ -61,25 +61,20 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 }
 
 func (t *SimpleChaincode) Invoke(stub shim.ChaincodeStubInterface, function string, args []string) ([]byte, error) {
-	/*
-		if function == "changeStatus" {
-			if len(args) != 3 {
-				return nil, errors.New("Incorrect number of arguments. Expecting 1")
-			}
-			return changeStatus(stub, args)
-		} else if function == "buyByAddress" {
-			if len(args) != 4 {
-				return nil, errors.New("Incorrect number of arguments. Expecting 1")
-			}
-			return buyByAddress(stub, args)
-		} else if function == "createUser" {
-			if len(args) != 3 {
-				return nil, errors.New("Incorrect number of arguments. Expecting 1")
-			}
-			return t.createUser(stub, args)
-		}*/
-	if function == "createUser" {
-		fmt.Printf("Start createUser...\n")
+	if function == "changeStatus" {
+		if len(args) != 3 {
+			return nil, errors.New("Incorrect number of arguments. Expecting 1")
+		}
+		return changeStatus(stub, args)
+	} else if function == "buyByAddress" {
+		if len(args) != 4 {
+			return nil, errors.New("Incorrect number of arguments. Expecting 1")
+		}
+		return buyByAddress(stub, args)
+	} else if function == "createUser" {
+		if len(args) != 2 {
+			return nil, errors.New("Incorrect number of arguments. Expecting 1")
+		}
 		return t.createUser(stub, args)
 	}
 	return nil, errors.New("Received unknown function invocation")

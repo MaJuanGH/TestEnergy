@@ -52,7 +52,7 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 	}
 
 	if function == "createUser" {
-		fmt.Printf("start createUser")
+		fmt.Printf("start createUser\n")
 		return t.createUser(stub, args)
 	}
 	return nil, nil
@@ -80,7 +80,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		}
 		_, homeBytes, err := getHomeByAddress(stub, args[0])
 		if err != nil {
-			fmt.Println("Error get home")
+			fmt.Println("Error get home\n")
 			return nil, err
 		}
 		return homeBytes, nil
@@ -95,7 +95,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		}
 		homeBytes, err1 := json.Marshal(&homes)
 		if err1 != nil {
-			fmt.Println("Error marshalling banks")
+			fmt.Println("Error marshalling banks\n")
 		}
 		return homeBytes, nil
 	} else if function == "getTransactions" {
@@ -104,12 +104,12 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 		}
 		transactions, err := getTransactions(stub)
 		if err != nil {
-			fmt.Println("Error unmarshalling")
+			fmt.Println("Error unmarshalling\n")
 			return nil, err
 		}
 		txBytes, err1 := json.Marshal(&transactions)
 		if err1 != nil {
-			fmt.Println("Error marshalling data")
+			fmt.Println("Error marshalling data\n")
 		}
 		return txBytes, nil
 	} else if function == "getTransactionById" {
@@ -128,7 +128,7 @@ func (t *SimpleChaincode) Query(stub shim.ChaincodeStubInterface, function strin
 func main() {
 	err := shim.Start(new(SimpleChaincode))
 	if err != nil {
-		fmt.Printf("Error starting Simple chaincode: %s", err)
+		fmt.Printf("Error starting Simple chaincode: %s\n", err)
 	}
 }
 
@@ -138,7 +138,7 @@ func GetAddress() (string, string, string) {
 	b := make([]byte, 48)
 
 	if _, err := io.ReadFull(rand.Reader, b); err != nil {
-		fmt.Printf("get rand failed")
+		fmt.Printf("get rand failed\n")
 		return "", "", ""
 	}
 
@@ -149,7 +149,7 @@ func GetAddress() (string, string, string) {
 	priKey = address + "1"
 	pubKey = address + "2"
 
-	fmt.Printf("get address ok, address = %v, priKey = %v, pubKey = %v", address, priKey, pubKey)
+	fmt.Printf("get address ok, address = %v, priKey = %v, pubKey = %v\n", address, priKey, pubKey)
 	return address, priKey, pubKey
 }
 
@@ -158,32 +158,32 @@ func (t *SimpleChaincode) createUser(stub shim.ChaincodeStubInterface, args []st
 	var err error
 	var homeBytes []byte
 	if len(args) != 2 {
-		fmt.Printf("args != 2")
+		fmt.Printf("args != 2\n")
 		return nil, errors.New("Incorrect number of arguments. Expecting 2")
 	}
 	address, priKey, pubKey := GetAddress()
 	energy, err = strconv.Atoi(args[0])
 	if err != nil {
-		fmt.Printf("get energy failed!")
+		fmt.Printf("get energy failed!\n")
 		return nil, errors.New("want Integer number")
 	}
 	money, err = strconv.Atoi(args[1])
 	if err != nil {
-		fmt.Printf("get money failed")
+		fmt.Printf("get money failed\n")
 		return nil, errors.New("want Integer number")
 	}
 	home := Home{Address: address, Energy: energy, Money: money, Id: homeNo, Status: 1, PriKey: priKey, PubKey: pubKey}
 	err = writeHome(stub, home)
 	if err != nil {
-		fmt.Printf("writehome failed")
+		fmt.Printf("writehome failed\n")
 		return nil, errors.New("write Error" + err.Error())
 	}
 	homeBytes, err = json.Marshal(&home)
 	if err != nil {
-		fmt.Printf("marshal home byte failed")
+		fmt.Printf("marshal home byte failed\n")
 		return nil, errors.New("Error retrieve")
 	}
-	fmt.Printf("create user success")
+	fmt.Printf("create user success\n")
 	return homeBytes, nil
 }
 

@@ -205,7 +205,11 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	homeSeller, _, err := getHomeByAddress(stub, args[0])
 	homeBuyer, _, err := getHomeByAddress(stub, args[2])
 
-	//if args[1] == args[2]+"11" {
+	if args[1] != args[2]+"11" {
+		fmt.Printf("Verify sign data failed!\n")
+		return nil, errors.New("Verify sign data failed!")
+	}
+
 	fmt.Printf("Verify sign data ok\n")
 	buyValue, erro := strconv.Atoi(args[3])
 	if erro != nil {
@@ -218,24 +222,26 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	}
 
 	fmt.Printf("Before trans:\n homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
-	fmt.Printf("homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
+	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
 	homeSeller.Energy = homeSeller.Energy - buyValue
 	homeSeller.Money = homeSeller.Money + buyValue
 	homeBuyer.Energy = homeBuyer.Energy + buyValue
 	homeBuyer.Money = homeBuyer.Money - buyValue
 
 	fmt.Printf("After trans:\n homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
-	fmt.Printf("homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
+	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
 
 	err = writeHome(stub, homeSeller)
 	if err == nil {
 		return nil, err
 	}
+	fmt.Printf("Write homeSeller OK!\n")
 
 	err = writeHome(stub, homeBuyer)
 	if err == nil {
 		return nil, err
 	}
+	fmt.Printf("Write homeBuyer OK!\n")
 
 	fmt.Printf("TransactionInfo:\n")
 	fmt.Printf("    BuyerAddress: %v\n", args[2])
@@ -258,8 +264,6 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	}
 
 	return txBytes, nil
-	//}
-	return nil, err
 }
 
 func changeStatus(stub shim.ChaincodeStubInterface, args []string) ([]byte, error) {

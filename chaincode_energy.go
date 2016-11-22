@@ -192,6 +192,7 @@ func (t *SimpleChaincode) createUser(stub shim.ChaincodeStubInterface, args []st
 		fmt.Printf("marshal home byte failed\n")
 		return nil, errors.New("Error retrieve")
 	}
+	homeNo = homeNo + 1
 	fmt.Printf("Create user success!\n")
 	return homeBytes, nil
 }
@@ -204,60 +205,60 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 	homeSeller, _, err := getHomeByAddress(stub, args[0])
 	homeBuyer, _, err := getHomeByAddress(stub, args[2])
 
-	if args[1] == args[2]+"11" {
-		fmt.Printf("Verify sign data ok\n")
-		buyValue, erro := strconv.Atoi(args[3])
-		if erro != nil {
-			fmt.Printf("The last args should be a integer number\n")
-			return nil, errors.New("want integer number")
-		}
-		if homeSeller.Energy < buyValue && homeBuyer.Money < buyValue {
-			fmt.Printf("not enough money or energy\n")
-			return nil, errors.New("not enough money or energy")
-		}
-
-		fmt.Printf("Before trans:\n homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
-		fmt.Printf("homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
-		homeSeller.Energy = homeSeller.Energy - buyValue
-		homeSeller.Money = homeSeller.Money + buyValue
-		homeBuyer.Energy = homeBuyer.Energy + buyValue
-		homeBuyer.Money = homeBuyer.Money - buyValue
-
-		fmt.Printf("After trans:\n homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
-		fmt.Printf("homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
-
-		err = writeHome(stub, homeSeller)
-		if err == nil {
-			return nil, err
-		}
-
-		err = writeHome(stub, homeBuyer)
-		if err == nil {
-			return nil, err
-		}
-
-		fmt.Printf("TransactionInfo:\n")
-		fmt.Printf("    BuyerAddress: %v\n", args[2])
-		fmt.Printf("    BuyerAddressSign: %v\n", args[1])
-		fmt.Printf("    SellerAddress: %v\n", args[0])
-		fmt.Printf("    Energy: %v\n", buyValue)
-		fmt.Printf("    Money: %v\n", buyValue)
-		fmt.Printf("    Id: %v\n", transactionNo)
-
-		transaction := Transaction{BuyerAddress: args[2], BuyerAddressSign: args[1], SellerAddress: args[0], Energy: buyValue, Money: buyValue, Id: transactionNo, Time: time.Now().Unix()}
-		err = writeTransaction(stub, transaction)
-		if err != nil {
-			return nil, err
-		}
-		transactionNo = transactionNo + 1
-		txBytes, err := json.Marshal(&transaction)
-
-		if err != nil {
-			return nil, errors.New("Error retrieving schoolBytes")
-		}
-
-		return txBytes, nil
+	//if args[1] == args[2]+"11" {
+	fmt.Printf("Verify sign data ok\n")
+	buyValue, erro := strconv.Atoi(args[3])
+	if erro != nil {
+		fmt.Printf("The last args should be a integer number\n")
+		return nil, errors.New("want integer number")
 	}
+	if homeSeller.Energy < buyValue && homeBuyer.Money < buyValue {
+		fmt.Printf("not enough money or energy\n")
+		return nil, errors.New("not enough money or energy")
+	}
+
+	fmt.Printf("Before trans:\n homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
+	fmt.Printf("homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
+	homeSeller.Energy = homeSeller.Energy - buyValue
+	homeSeller.Money = homeSeller.Money + buyValue
+	homeBuyer.Energy = homeBuyer.Energy + buyValue
+	homeBuyer.Money = homeBuyer.Money - buyValue
+
+	fmt.Printf("After trans:\n homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
+	fmt.Printf("homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
+
+	err = writeHome(stub, homeSeller)
+	if err == nil {
+		return nil, err
+	}
+
+	err = writeHome(stub, homeBuyer)
+	if err == nil {
+		return nil, err
+	}
+
+	fmt.Printf("TransactionInfo:\n")
+	fmt.Printf("    BuyerAddress: %v\n", args[2])
+	fmt.Printf("    BuyerAddressSign: %v\n", args[1])
+	fmt.Printf("    SellerAddress: %v\n", args[0])
+	fmt.Printf("    Energy: %v\n", buyValue)
+	fmt.Printf("    Money: %v\n", buyValue)
+	fmt.Printf("    Id: %v\n", transactionNo)
+
+	transaction := Transaction{BuyerAddress: args[2], BuyerAddressSign: args[1], SellerAddress: args[0], Energy: buyValue, Money: buyValue, Id: transactionNo, Time: time.Now().Unix()}
+	err = writeTransaction(stub, transaction)
+	if err != nil {
+		return nil, err
+	}
+	transactionNo = transactionNo + 1
+	txBytes, err := json.Marshal(&transaction)
+
+	if err != nil {
+		return nil, errors.New("Error retrieving schoolBytes")
+	}
+
+	return txBytes, nil
+	//}
 	return nil, err
 }
 

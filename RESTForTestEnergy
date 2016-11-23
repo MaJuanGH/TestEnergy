@@ -1,0 +1,82 @@
+{
+   "jsonrpc": "2.0",
+   "method": "deploy",
+   "params": {
+    "type": 1,
+    "chaincodeID":{
+        "name": "myEnergy112301"
+    },
+    "ctorMsg": {
+        "args":["init"]
+     },
+    "secureContext": "jim"
+  },
+   "id": 1
+ }
+
+
+{
+   "jsonrpc": "2.0",
+   "method": "invoke",
+   "params": {
+       "type": 1,
+       "chaincodeID":{
+           "name":"myEnergy112301"
+       },
+       "ctorMsg": {
+        "args":["createUser", "100", "200"]
+
+       },
+       "secureContext": "jim"
+   },
+   "id": 3
+}
+
+{
+   "jsonrpc": "2.0",
+   "method": "invoke",
+   "params": {
+    "type": 1,
+    "chaincodeID":{
+        "name": "myEnergy112301"
+    },
+    "ctorMsg": {
+        "args":["buyByAddress", "a480312730a2fd18ebd1d8afe6dab5dd", "ef238e4c02dddfd707522be22c21680011", "ef238e4c02dddfd707522be22c216800", "5"]
+     },
+    "secureContext": "jim"
+  },
+   "id": 3
+ }
+
+
+{
+   "jsonrpc": "2.0",
+   "method": "query",
+   "params": {
+       "type": 1,
+       "chaincodeID":{
+           "name":"myEnergy112301"
+       },
+       "ctorMsg": {
+         "args":["getHomeByAddress","a480312730a2fd18ebd1d8afe6dab5dd"]
+       },
+       "secureContext": "jim"
+   },
+   "id": 5
+}
+
+{
+   "jsonrpc": "2.0",
+   "method": "query",
+   "params": {
+       "type": 1,
+       "chaincodeID":{
+           "name":"myEnergy112301"
+       },
+       "ctorMsg": {
+         "args":["getTransactions"]
+       },
+       "secureContext": "jim"
+   },
+   "id": 5
+}

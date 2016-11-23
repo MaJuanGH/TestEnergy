@@ -1,9 +1,3 @@
-/*
-	author:swb
-	emial:swbsin@163.com
-	MIT License
-*/
-
 package main
 
 import (

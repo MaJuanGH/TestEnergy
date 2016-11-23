@@ -52,10 +52,6 @@ func (t *SimpleChaincode) Init(stub shim.ChaincodeStubInterface, function string
 		return nil, errors.New("Incorrect number of arguments. Expecting 1")
 	}
 
-	/*	if function == "createUser" {
-		fmt.Printf("Start createUser...\n")
-		return t.createUser(stub, args)
-	}*/
 	fmt.Printf("Init OK!\n")
 	return nil, nil
 }
@@ -156,7 +152,6 @@ func GetAddress() (string, string, string) {
 	priKey = address + "1"
 	pubKey = address + "2"
 
-	fmt.Printf("Get address ok, address = %v, priKey = %v, pubKey = %v\n", address, priKey, pubKey)
 	return address, priKey, pubKey
 }
 
@@ -223,6 +218,7 @@ func buyByAddress(stub shim.ChaincodeStubInterface, args []string) ([]byte, erro
 
 	fmt.Printf("Before trans:\n  homeSeller.Energy = %d, homeSeller.Money = %d\n", homeSeller.Energy, homeSeller.Money)
 	fmt.Printf("  homeBuyer.Energy = %d, homeBuyer.Money = %d\n", homeBuyer.Energy, homeBuyer.Money)
+
 	homeSeller.Energy = homeSeller.Energy - buyValue
 	homeSeller.Money = homeSeller.Money + buyValue
 	homeBuyer.Energy = homeBuyer.Energy + buyValue
@@ -362,6 +358,7 @@ func getTransactions(stub shim.ChaincodeStubInterface) ([]Transaction, error) {
 			transactions = append(transactions, transaction)
 			i = i + 1
 		}
+		return transactions, nil
 	} else {
 		i := 0
 		for i < 10 {
